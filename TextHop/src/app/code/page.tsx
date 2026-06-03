@@ -5,13 +5,6 @@ import { FormEvent, useState } from "react"
 
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 
 const securityWarning =
@@ -35,40 +28,44 @@ export default function CodePage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center bg-muted/30 px-4 py-8 sm:px-6">
-      <div className="mx-auto w-full max-w-lg space-y-6">
-        <Link className="text-sm text-muted-foreground hover:text-foreground" href="/">
-          Voltar
-        </Link>
-        <Alert className="border-amber-300 bg-amber-50 text-amber-950">
-          <AlertDescription className="text-amber-900">
-            {securityWarning}
-          </AlertDescription>
-        </Alert>
-        <Card>
-          <CardHeader>
-            <CardTitle>Usar código</CardTitle>
-            <CardDescription>
-              Digite o código curto gerado em outro dispositivo.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form className="space-y-4" onSubmit={useCode}>
-              <Input
-                autoCapitalize="characters"
-                autoComplete="off"
-                className="h-12 font-mono text-lg tracking-[0.2em]"
-                placeholder="K7P9Q2"
-                value={code}
-                onChange={(event) => setCode(event.target.value)}
-              />
-              {error ? <p className="text-sm text-destructive">{error}</p> : null}
-              <Button className="w-full" type="submit">
-                Abrir texto
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+    <main className="min-h-screen bg-background px-4 py-5 text-foreground sm:px-6">
+      <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-md flex-col justify-center">
+        <div className="space-y-6">
+          <header className="flex items-center justify-between gap-4">
+            <Link className="text-sm font-semibold tracking-tight" href="/">
+              TextHop
+            </Link>
+            <Link className="text-sm text-muted-foreground transition hover:text-foreground" href="/new">
+              Criar texto
+            </Link>
+          </header>
+
+          <section className="space-y-2">
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Usar código</h1>
+            <p className="text-sm leading-6 text-muted-foreground">Digite o código curto gerado em outro dispositivo.</p>
+          </section>
+
+          <form className="space-y-3" onSubmit={useCode}>
+            <Input
+              autoCapitalize="characters"
+              autoComplete="off"
+              className="h-14 text-center font-mono text-2xl tracking-[0.22em]"
+              placeholder="K7P9Q2"
+              value={code}
+              onChange={(event) => setCode(event.target.value)}
+            />
+            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            <Button className="h-11 w-full" type="submit">
+              Abrir texto
+            </Button>
+          </form>
+
+          <Alert className="border-amber-200 bg-amber-50 text-amber-950">
+            <AlertDescription className="text-sm leading-6 text-amber-900">
+              {securityWarning}
+            </AlertDescription>
+          </Alert>
+        </div>
       </div>
     </main>
   )

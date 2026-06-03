@@ -7,13 +7,6 @@ import { CopyButton } from "@/components/copy-button"
 import { QrCode } from "@/components/qr-code"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button, buttonVariants } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 
 const securityWarning =
@@ -56,105 +49,85 @@ export default function NewTextPage() {
   }
 
   return (
-    <main className="min-h-screen bg-muted/30 px-4 py-8 sm:px-6">
-      <div className="mx-auto grid w-full max-w-5xl gap-6 lg:grid-cols-[1fr_24rem]">
-        <section className="space-y-6">
-          <Link className="text-sm text-muted-foreground hover:text-foreground" href="/">
-            Voltar
+    <main className="min-h-screen bg-background px-4 py-5 text-foreground sm:px-6">
+      <div className="mx-auto w-full max-w-2xl space-y-6">
+        <header className="flex items-center justify-between gap-4">
+          <Link className="text-sm font-semibold tracking-tight" href="/">
+            TextHop
           </Link>
-          <div className="space-y-2">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Criar texto
-            </h1>
-            <p className="text-muted-foreground">
-              Cole ou escreva o texto para gerar um código curto e um link.
-            </p>
-          </div>
-          <Alert className="border-amber-300 bg-amber-50 text-amber-950">
-            <AlertDescription className="text-amber-900">
-              {securityWarning}
-            </AlertDescription>
-          </Alert>
+          <Link className="text-sm text-muted-foreground transition hover:text-foreground" href="/code">
+            Usar código
+          </Link>
+        </header>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Texto</CardTitle>
-              <CardDescription>Expira automaticamente após 1 hora.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-4" onSubmit={createText}>
-                <Textarea
-                  className="min-h-72 resize-y text-base"
-                  maxLength={10000}
-                  placeholder="Cole seu texto aqui..."
-                  value={content}
-                  onChange={(event) => setContent(event.target.value)}
-                />
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    {content.length}/10000 caracteres
-                  </span>
-                  <Button disabled={isSubmitting} type="submit">
-                    {isSubmitting ? "Gerando..." : "Gerar código"}
-                  </Button>
-                </div>
-                {error ? <p className="text-sm text-destructive">{error}</p> : null}
-              </form>
-            </CardContent>
-          </Card>
+        <section className="space-y-2">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Criar texto</h1>
+          <p className="text-sm leading-6 text-muted-foreground">
+            Cole ou escreva o texto para gerar um código curto e um link.
+          </p>
         </section>
 
-        <aside className="space-y-4 lg:pt-20">
-          {createdText ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>Texto criado</CardTitle>
-                <CardDescription>
+        <Alert className="border-amber-200 bg-amber-50 text-amber-950">
+          <AlertDescription className="text-sm leading-6 text-amber-900">
+            {securityWarning}
+          </AlertDescription>
+        </Alert>
+
+        <form className="space-y-3" onSubmit={createText}>
+          <Textarea
+            className="min-h-56 resize-y p-4 text-base leading-7 sm:min-h-80"
+            maxLength={10000}
+            placeholder="Cole seu texto aqui..."
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+          />
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs text-muted-foreground">{content.length}/10000 caracteres</span>
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting ? "Gerando..." : "Gerar código"}
+            </Button>
+          </div>
+          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+        </form>
+
+        {createdText ? (
+          <section className="space-y-4 border-t pt-6">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <h2 className="text-lg font-medium">Texto criado</h2>
+                <p className="text-sm text-muted-foreground">
                   Válido até {new Date(createdText.expiresAt).toLocaleTimeString("pt-BR")}.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-5">
-                <div>
-                  <p className="text-sm text-muted-foreground">Código</p>
-                  <div className="mt-2 flex flex-col gap-3 rounded-lg border bg-muted/40 p-3 sm:flex-row sm:items-center sm:justify-between">
-                    <code className="font-mono text-2xl font-semibold tracking-[0.3em]">
-                      {createdText.code}
-                    </code>
-                    <CopyButton value={createdText.code} />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Link</p>
-                  <div className="mt-2 space-y-3 rounded-lg border bg-muted/40 p-3">
-                    <p className="break-all text-sm">{createdText.url}</p>
-                    <div className="flex flex-col gap-2 sm:flex-row">
-                      <CopyButton value={createdText.url} label="Copiar link" />
-                      <Link
-                        className={buttonVariants({ variant: "outline" })}
-                        href={`/t/${createdText.code}`}
-                      >
-                        Abrir
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p className="mb-2 text-sm text-muted-foreground">QR Code</p>
-                  <QrCode value={createdText.url} />
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Resultado</CardTitle>
-                <CardDescription>
-                  O código e o link aparecem aqui depois da criação.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-        </aside>
+                </p>
+              </div>
+              <Link className={buttonVariants({ variant: "outline" })} href={`/t/${createdText.code}`}>
+                Abrir
+              </Link>
+            </div>
+
+            <div className="rounded-xl border bg-muted/30 p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Código</p>
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <code className="font-mono text-4xl font-semibold tracking-[0.2em] sm:text-5xl">
+                  {createdText.code}
+                </code>
+                <CopyButton value={createdText.code} />
+              </div>
+            </div>
+
+            <div className="rounded-xl border bg-muted/30 p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Link</p>
+              <p className="mt-2 break-all text-sm leading-6">{createdText.url}</p>
+              <div className="mt-3">
+                <CopyButton value={createdText.url} label="Copiar link" />
+              </div>
+            </div>
+
+            <div className="rounded-xl border bg-muted/30 p-4">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">QR Code</p>
+              <QrCode value={createdText.url} />
+            </div>
+          </section>
+        ) : null}
       </div>
     </main>
   )
