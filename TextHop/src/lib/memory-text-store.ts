@@ -1,5 +1,4 @@
-import { randomInt } from "node:crypto"
-
+import { generateCode } from "@/lib/code"
 import {
   MAX_CONTENT_LENGTH,
   normalizeCode,
@@ -7,8 +6,6 @@ import {
   type TextStore,
 } from "@/lib/text-store"
 
-const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-const CODE_LENGTH = 6
 const TEXT_TTL_MS = 60 * 60 * 1000
 
 type StoredText = Omit<SharedText, "createdAt" | "expiresAt"> & {
@@ -22,16 +19,6 @@ const memoryStore = globalThis as typeof globalThis & {
 
 const texts = memoryStore.__texthopTexts ?? new Map<string, StoredText>()
 memoryStore.__texthopTexts = texts
-
-function generateCode() {
-  let code = ""
-
-  for (let index = 0; index < CODE_LENGTH; index += 1) {
-    code += CODE_ALPHABET[randomInt(CODE_ALPHABET.length)]
-  }
-
-  return code
-}
 
 function cleanupExpired(now = Date.now()) {
   for (const [code, text] of texts) {

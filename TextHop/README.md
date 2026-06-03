@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TextHop
 
-## Getting Started
+Site para compartilhar textos entre dispositivos usando código curto, link e QR Code.
 
-First, run the development server:
+## Desenvolvimento local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Por padrão, o projeto usa armazenamento em memória:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+TEXT_STORE=memory
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Esse modo é apenas para desenvolvimento local.
 
-## Learn More
+## Supabase
 
-To learn more about Next.js, take a look at the following resources:
+Antes de usar Supabase, execute o SQL em `supabase/schema.sql` no projeto Supabase.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Depois configure as variáveis de ambiente:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_APP_URL=https://sua-url.vercel.app
+TEXT_STORE=supabase
+SUPABASE_URL=https://seu-projeto.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=sua-service-role-key
+```
 
-## Deploy on Vercel
+`SUPABASE_SERVICE_ROLE_KEY` deve ficar somente no backend. Não use prefixo `NEXT_PUBLIC_` para segredos.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+```
+
+## Vercel
+
+Para deploy na Vercel, configure as mesmas variáveis no painel do projeto.
+
+Use `TEXT_STORE=supabase` em produção. O storage em memória não é confiável em ambiente serverless.
